@@ -1,6 +1,7 @@
 package com.example.birthdaybuddy;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.activity.EdgeToEdge;
@@ -11,9 +12,13 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity {
     FloatingActionButton fab;
     int count = 0;
+    List<DataClass> list;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,5 +38,27 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
             finish();
         });
+        list=new ArrayList<>();
+        retrieveData();
+    }
+
+    private void retrieveData()
+    {
+        list.clear();
+
+        SharedPreferences sharedPreferences= getSharedPreferences("BirthdayData",MODE_PRIVATE);
+        count = sharedPreferences.getInt("count",0);
+
+        for(int i=0;i<=count;i++)
+        {
+            String name=sharedPreferences.getString("name"+i,null);
+            String birthday=sharedPreferences.getString("birthday"+i,null);
+            String imagepath=sharedPreferences.getString("imagepath"+i,null);
+
+            if(name != null && birthday != null)
+            {
+                list.add(new DataClass(name,birthday,imagepath));
+            }
+        }
     }
 }
