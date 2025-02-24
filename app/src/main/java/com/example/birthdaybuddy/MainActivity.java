@@ -9,6 +9,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -19,6 +21,8 @@ public class MainActivity extends AppCompatActivity {
     FloatingActionButton fab;
     int count = 0;
     List<DataClass> list;
+    RecyclerView recyclerView;
+    RecyclerView.Adapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +36,8 @@ public class MainActivity extends AppCompatActivity {
         });
         count = getIntent().getIntExtra("count", 0);
         fab = findViewById(R.id.fab);
+        recyclerView = findViewById(R.id.recyclerview);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
         fab.setOnClickListener(view -> {
             Intent intent = new Intent(this,AddActivity.class);
             intent.putExtra("count",count);
@@ -40,6 +46,11 @@ public class MainActivity extends AppCompatActivity {
         });
         list=new ArrayList<>();
         retrieveData();
+        setAdapter();
+    }
+    private void setAdapter(){
+        adapter = new Adapter(this,list);
+        recyclerView.setAdapter(adapter);
     }
 
     private void retrieveData()
@@ -53,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
         {
             String name=sharedPreferences.getString("name"+i,null);
             String birthday=sharedPreferences.getString("birthday"+i,null);
-            String imagepath=sharedPreferences.getString("imagepath"+i,null);
+            String imagepath=sharedPreferences.getString("imagePath"+i,null);
 
             if(name != null && birthday != null)
             {
